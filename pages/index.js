@@ -1,36 +1,20 @@
-import { useState, useEffect } from "react"
-
 import SideMenu from "../components/sideMenu"
 import Carousel from "../components/carousel"
 import MovieList from "../components/movieList"
 
-import { getMovies } from "../actions"
+import { getMovies, getCategories } from "../actions"
 
-const Home = () => {
-	const [movies, setMovies] = useState([])
-	const [count, setCount] = useState(0)
-
-	useEffect(() => {
-		const fetchData = async () => {
-			const resMovies = await getMovies()
-			setMovies(resMovies)
-		}
-
-		fetchData()
-	}, [count])
-
+const Home = (props) => {
 	return (
 		<div>
 			<div className="home-page">
 				<div className="container mt-5">
 					<div className="row">
-						<SideMenu />
-
+						<SideMenu categories={props.categories} />
 						<div className="col-lg-9">
-							<Carousel />
-
+							<Carousel images={props.images} />
 							<div className="row">
-								<MovieList movies={movies} />
+								<MovieList movies={props.movies || []} />
 							</div>
 						</div>
 					</div>
@@ -42,9 +26,17 @@ const Home = () => {
 
 Home.getInitialProps = async () => {
 	const movies = await getMovies()
+	const categories = await getCategories()
+	const images = movies.map((movie) => ({
+		id: `image=${movie.id}`,
+		url: movie.cover,
+		title: movie.name,
+	}))
 
 	return {
 		movies,
+		images,
+		categories,
 	}
 }
 

@@ -6,7 +6,6 @@ const Movie = (props) => {
 	const { id } = router.query
 	const { movie } = props
 
-	console.log("props", props)
 	return (
 		<div className="container">
 			<div className="jumbotron">
